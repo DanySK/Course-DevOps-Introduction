@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = "$jdkVersion"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "commons-io:commons-io:$commonsIoVersion"
+    compile "com.omertron:thetvdbapi:$tvDbApiVersion"
+}

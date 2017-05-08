@@ -1,0 +1,16 @@
+plugins {
+  id "org.xtext.xtend" version "1.0.0"
+}
+apply plugin: 'java'
+apply plugin: 'scala'
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.2'
+    compile 'org.codehaus.groovy:groovy:2.3.7'
+    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.9.0'
+}
