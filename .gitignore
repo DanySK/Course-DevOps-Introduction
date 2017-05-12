@@ -19,3 +19,4 @@ build/
 .gradle/
 *.synctex.gz
 workspace/01-dependencies/src/main/resources/TheTVDBAPIKey
+lab/
