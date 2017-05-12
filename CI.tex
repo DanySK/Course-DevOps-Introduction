@@ -792,15 +792,15 @@ public final class PrintSeries {
     private PrintSeries() {
     }
     public static void main(final String... args) throws IOException {
-	final String key = IOUtils.toString(PrintSeries.class
-		.getResourceAsStream("/TheTVDBAPIKey"), Charsets.UTF_8);
-	final TheTVDBApi api = new TheTVDBApi(key);
-	api.searchSeries("Breaking Bad", LANG).stream()
-		.filter(s -> s.getSeriesName().equals(SERIE))
-		.map(Series::getId)
-		.flatMap(sId -> api.getAllEpisodes(sId, LANG).stream())
-		.map(Episode::getEpisodeName)
-		.forEach(System.out::println);
+    final String key = IOUtils.toString(PrintSeries.class
+        .getResourceAsStream("/TheTVDBAPIKey"), Charsets.UTF_8);
+    final TheTVDBApi api = new TheTVDBApi(key);
+    api.searchSeries("Breaking Bad", LANG).stream()
+        .filter(s -> s.getSeriesName().equals(SERIE))
+        .map(Series::getId)
+        .flatMap(sId -> api.getAllEpisodes(sId, LANG).stream())
+        .map(Episode::getEpisodeName)
+        .forEach(System.out::println);
     }
 }
     \end{minted}
