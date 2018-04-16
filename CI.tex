@@ -20,25 +20,22 @@
 \setbeamercolor*{titlelike}{parent=palette primary}
 
 \usepackage[utf8]{inputenc}
-\usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{multirow}
-\usepackage{hhline}
-\usepackage{amsfonts,amstext,amssymb,wasysym}
-\usepackage{fancyvrb}
-\usepackage{alltt}
-\usepackage{textcomp}
-\usepackage{url}
-\usepackage{multimedia,pgf}
-\usepackage{geometry}
 \usepackage{minted}
 \usepackage{bibentry}
-\usepackage{framed}
 \usepackage{cleveref}
+
+\newcommand{\codefile}[3]{
+	\begin{block}{\texttt{#1}}
+		\inputminted[fontsize=#2,linenos=true,breaklines=true]{#3}{workspace/#1}
+	\end{block}
+}
+\newcommand{\java}[2]{\codefile{#1}{#2}{java}}
+\newcommand{\groovy}[2]{\codefile{#1}{#2}{groovy}}
+
 \nobibliography*
 
-\title[Continuous integration and delivery]{Continuous integration and delivery \\ \scriptsize{A quick guide through the wonders of teamwork with distributed version control systems, dependency management, build automation, and continuous integration and delivery.}}
+\title[08 - Continuous integration and delivery]{Continuous integration and delivery \\ \scriptsize{A quick guide through the wonders of teamwork with distributed version control systems, dependency management, build automation, and continuous integration and delivery.}}
 
 \author[Pianini]{
 Danilo Pianini\\
@@ -51,10 +48,6 @@ Danilo Pianini\\
 \date[\today{}]{Paradigmi di Programmazione e Sviluppo \\
 \scriptsize \today{} - Cesena (Italy)
 }
-
-\pgfdeclareimage[height=0.625cm]{university-logo}{images/logo}
-\logo{\pgfuseimage{university-logo}}
-
 
 \begin{document}
 
@@ -98,9 +91,9 @@ Danilo Pianini\\
 		\item Google and Mozilla release \textbf{at least} once a day
 	\end{itemize}
 	\begin{block}{Higher frequency, lower risk \cite{semaphoreci}}
-		\includegraphics[width=.49\textwidth]{images/integration-traditional}
+		\includegraphics[width=.47\textwidth]{images/integration-traditional}
 		~ \vline ~
-		\includegraphics[width=.49\textwidth]{images/integration-continuous}
+		\includegraphics[width=.47\textwidth]{images/integration-continuous}
 	\end{block}
 \end{frame}
 
@@ -496,7 +489,7 @@ GIT - the stupid content tracker
 		Immediately configure a \texttt{.gitignore} file
 	\end{block}
 	\begin{block}{Choose what to track carefully}
-		Track only the files that are not generable (sources, resources, scripts...). Never ever track
+		Track only the files that are not generable (sources, resources, scripts...). \textbf{Never ever track}
 		\begin{itemize}
 			\item binaries
 			\item generated sources (e.g. from ANTLR, Xtend, JavaCC...)
@@ -780,31 +773,7 @@ GIT - the stupid content tracker
 \end{frame}
 
 \begin{frame}[fragile]{Maybe less code than you may expect}
-  \begin{block}{}
-    \begin{minted}[fontsize=\scriptsize]{java}
-package it.unibo.ci;
-
-import ...
-
-public final class PrintSeries {
-    private static final String LANG = "it";
-    private static final String SERIE = "Breaking Bad";
-    private PrintSeries() {
-    }
-    public static void main(final String... args) throws IOException {
-    final String key = IOUtils.toString(PrintSeries.class
-        .getResourceAsStream("/TheTVDBAPIKey"), Charsets.UTF_8);
-    final TheTVDBApi api = new TheTVDBApi(key);
-    api.searchSeries("Breaking Bad", LANG).stream()
-        .filter(s -> s.getSeriesName().equals(SERIE))
-        .map(Series::getId)
-        .flatMap(sId -> api.getAllEpisodes(sId, LANG).stream())
-        .map(Episode::getEpisodeName)
-        .forEach(System.out::println);
-    }
-}
-    \end{minted}
-  \end{block}
+	\java{01-dependencies/src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
 \end{frame}
 
 \begin{frame}[fragile]{Trick revealed}
@@ -1035,22 +1004,8 @@ dependencies {
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Minimal Java build}
-	\begin{block}{\texttt{src/main/java/HelloWorld.java}}
-		\begin{minted}[fontsize=\scriptsize]{java}
-public class HelloWorld {
-
-    public static void main(String[] args) {
-        System.out.println("Hello, world!");
-    }
-    
-}
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{build.gradle}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-apply plugin: 'java'
-		\end{minted}
-	\end{block}
+	\java{00-minimal/src/main/java/HelloWorld.java}{\scriptsize}
+	\groovy{00-minimal/build.gradle}{\scriptsize}
 	Yes, it's a one-liner.
 	\begin{block}{File system before the Gradle execution}
 		\begin{minted}[fontsize=\scriptsize]{bash}
@@ -1080,9 +1035,8 @@ $ gradle build
 :check UP-TO-DATE
 :build
 
-BUILD SUCCESSFUL
-
-Total time: 1.024 secs
+BUILD SUCCESSFUL in 0s
+2 actionable tasks: 2 executed
 		\end{minted}
 	\end{block}
 	\begin{block}{File system after the execution}
@@ -1113,85 +1067,11 @@ $ tree -A
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Let's build our toy example}
-	\begin{block}{\texttt{src/main/java/it/unibo/ci/PrintBreakingBad.java}}
-		\begin{minted}[fontsize=\tiny]{java}
-package it.unibo.ci;
-
-import java.io.IOException;
-import org.apache.commons.io.IOUtils;
-import com.google.common.base.Charsets;
-import com.omertron.thetvdbapi.TheTVDBApi;
-import com.omertron.thetvdbapi.model.Episode;
-import com.omertron.thetvdbapi.model.Series;
-
-public final class PrintBreakingBad {
-    private static final String LANG = "it";
-    private static final String SERIE = "Breaking Bad";
-    private PrintBreakingBad() {
-    }
-
-    public static void main(String... args) throws ClassNotFoundException, IOException {
-        final String key = IOUtils.toString(PrintBreakingBad.class.getResourceAsStream("/TheTVDBAPIKey"),
-                Charsets.UTF_8);
-        final TheTVDBApi api = new TheTVDBApi(key);
-        api.searchSeries("Breaking Bad", LANG).stream()
-            .filter(s -> s.getSeriesName().equals(SERIE))
-            .map(Series::getId)
-            .flatMap(s -> api.getAllEpisodes(s, LANG).stream())
-            .map(Episode::getEpisodeName)
-            .forEach(System.out::println);
-    }
-}
-		\end{minted}
-	\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Let's build our toy example}
-	\begin{block}{\texttt{build.gradle}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-apply plugin: 'java'
-
-sourceCompatibility = "$jdkVersion"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "commons-io:commons-io:$commonsIoVersion"
-    compile "com.omertron:thetvdbapi:$tvDbApiVersion"
-}
-		\end{minted}
-	\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Let's build our toy example}
-	\begin{block}{\texttt{gradle.properties}}
-		\begin{minted}[fontsize=\tiny]{java}
-group = it.unibo.apice
-artifactId = printbbepisodes
-version = 0.0.0
-projectLongName = Breaking Bad Episode Titles
-projectDescription = A program that fetches information about Breaking Bad on TheTVDb and prints episodes
-licenseName = Apache License 2.0
-
-jdkVersion = 1.8
-
-commonsIoVersion = +
-guavaVersion = 19.0
-tvDbApiVersion = [1.6, 1.7]
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{settings.gradle}}
-		\begin{minted}[fontsize=\tiny]{java}
-rootProject.name = "$artifactId"
-		\end{minted}
-	\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Let's build our toy example}
+\begin{frame}[fragile, allowframebreaks]{Let's build our toy example}
+	\java{01-dependencies/src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
+	\groovy{01-dependencies/build.gradle}{\scriptsize}
+	\groovy{01-dependencies/gradle.properties}{\scriptsize}
+	\groovy{01-dependencies/settings.gradle}{\scriptsize}
 	\begin{block}{\texttt{Execution}}
 		\begin{minted}[fontsize=\tiny]{bash}
 $ gradle clean build
@@ -1202,26 +1082,20 @@ Download https://repo1.maven.org/maven2/com/google/guava/guava-parent/19.0/guava
 Download https://repo1.maven.org/maven2/com/omertron/thetvdbapi/1.7/thetvdbapi-1.7.pom
 Download https://repo1.maven.org/maven2/org/sonatype/oss/oss-parent/9/oss-parent-9.pom
 Download https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.9/slf4j-api-1.7.9.pom
-...many transitive dependencies after...
-Download https://repo1.maven.org/maven2/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar
-Download https://repo1.maven.org/maven2/commons-pool/commons-pool/1.6/commons-pool-1.6.jar
-Download https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar
-Download https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.6/httpclient-4.3.6.jar
-Download https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.3.3/httpcore-4.3.3.jar
+...many transitive dependencies later...
 :processResources
 :classes
 :jar
 :assemble
-:compileTestJava UP-TO-DATE
-:processTestResources UP-TO-DATE
+:compileTestJava NO-SOURCE
+:processTestResources NO-SOURCE
 :testClasses UP-TO-DATE
-:test UP-TO-DATE
+:test NO-SOURCE
 :check UP-TO-DATE
 :build
 
-BUILD SUCCESSFUL
-
-Total time: 9.002 secs
+BUILD SUCCESSFUL in 2s
+3 actionable tasks: 3 executed
 		\end{minted}
 	\end{block}
 \end{frame}
@@ -1276,11 +1150,12 @@ $ tree -A
         |   |-- HelloGroovy.groovy
         |-- java
         |   |-- HelloWorld.java
-        |   |-- TestXtend.xtend
+        |-- kotlin
+        |   |-- HelloKt.kt
         |-- scala
             |-- HelloScala.scala
 
-5 directories, 5 files
+6 directories, 5 files
 		\end{minted}
 	\end{block}
 	\begin{block}{\texttt{src/main/groovy/HelloGroovy.groovy}}
