@@ -32,6 +32,8 @@
 }
 \newcommand{\java}[2]{\codefile{#1}{#2}{java}}
 \newcommand{\groovy}[2]{\codefile{#1}{#2}{groovy}}
+\newcommand{\kotlin}[2]{\codefile{#1}{#2}{kotlin}}
+\newcommand{\scala}[2]{\codefile{#1}{#2}{scala}}
 
 \nobibliography*
 
@@ -1118,26 +1120,6 @@ BUILD SUCCESSFUL in 2s
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Tests as part of the build}
-	As you can see from the output of the previous case, the tests are executed by default for every build!
-	\begin{block}{Tests and Gradle, how to:}
-		\begin{itemize}
-			\item Add the libraries you need to the appropriate dependency scope
-			\item Put your test sources in \texttt{src/test/nameofyourlanguage}
-		\end{itemize}
-	\end{block}
-	\begin{block}{\texttt{build.gradle} that enables and uses JUnit}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-apply plugin: 'java'
-repositories {
-    mavenCentral()
-}
-dependencies {
-    testCompile 'junit:junit:4.12'
-}
-		\end{minted}
-	\end{block}
-\end{frame}
 \begin{frame}[fragile, allowframebreaks]{Multi-language build}
 	\begin{block}{File system before the execution}
 		\begin{minted}[fontsize=\scriptsize]{bash}
@@ -1158,71 +1140,25 @@ $ tree -A
 6 directories, 5 files
 		\end{minted}
 	\end{block}
-	\begin{block}{\texttt{src/main/groovy/HelloGroovy.groovy}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-println "Hello, Groovy"
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{src/main/java/HelloWorld.java}}
-		\begin{minted}[fontsize=\scriptsize]{java}
-public class HelloWorld {
-
-    public static void main(String... args) {
-        System.out.println("Hello, world!");
-    }
-    
-}
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{src/main/java/TestXtend.xtend}}
-		\begin{minted}[fontsize=\scriptsize]{xtend}
-class TestXtend {
-  def static void main(String... args) {
-    println("Hello Xtend")
-  }
-}
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{src/main/scala/HelloScala.scala}}
-		\begin{minted}[fontsize=\scriptsize]{scala}
-object HelloScala extends App  {
-    println("Hello Scala")
-}
-		\end{minted}
-	\end{block}
-	\begin{block}{\texttt{build.gradle}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-plugins {
-  id "org.xtext.xtend" version "1.0.0"
-}
-apply plugin: 'java'
-apply plugin: 'scala'
-apply plugin: 'groovy'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'org.scala-lang:scala-library:2.12.2'
-    compile 'org.codehaus.groovy:groovy:2.3.7'
-    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.9.0'
-}
-		\end{minted}
-	\end{block}
+	\groovy{02-multilang/src/main/groovy/HelloGroovy.groovy}{\normalsize}
+	\java{02-multilang/src/main/java/HelloWorld.java}{\normalsize}
+	\kotlin{02-multilang/src/main/kotlin/HelloKt.kt}{\normalsize}
+	\scala{02-multilang/src/main/scala/HelloScala.scala}{\normalsize}
+	\groovy{02-multilang/build.gradle}{\tiny}
 	\begin{block}{\texttt{Execution}}
 		\begin{minted}[fontsize=\tiny]{bash}
 $ gradle clean build
 :clean
-:generateXtext
+:compileKotlin
 :compileJava
 :compileGroovy
 :compileScala
+Pruning sources from previous analysis, due to incompatible CompileSetup.
 :processResources NO-SOURCE
 :classes
 :jar
 :assemble
-:generateTestXtext NO-SOURCE
+:compileTestKotlin NO-SOURCE
 :compileTestJava NO-SOURCE
 :compileTestGroovy NO-SOURCE
 :compileTestScala NO-SOURCE
@@ -1232,44 +1168,89 @@ $ gradle clean build
 :check UP-TO-DATE
 :build
 
-BUILD SUCCESSFUL
+BUILD SUCCESSFUL in 7s
+6 actionable tasks: 6 executed
+		\end{minted}
+	\end{block}
+\end{frame}
 
-Total time: 10.627 secs
+\begin{frame}[fragile]{Tests as part of the build}
+	As you can see from the output of the previous case, the tests are executed by default for every build!
+	\begin{block}{Tests and Gradle, how to:}
+		\begin{itemize}
+			\item Add the libraries you need to the appropriate dependency scope
+			\item Put your test sources in \texttt{src/test/nameofyourlanguage}
+		\end{itemize}
+	\end{block}
+	\begin{block}{\texttt{build.gradle} that enables and uses JUnit}
+		\begin{minted}[fontsize=\scriptsize]{groovy}
+apply plugin: 'java'
+repositories {
+    mavenCentral()
+}
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
 		\end{minted}
 	\end{block}
-	\begin{block}{Build folder after the execution}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{An example with ScalaTest and Scoverage}
+	JUnit is a first class citizen in Gradle, ScalaTest is not (yet), as many other suites
+	\begin{block}{Using other suites in Gradle:}
+		\begin{itemize}
+			\item Identify suitable gradle plugins
+			\begin{itemize}
+				\item tipically every framework also provides a Gradle plugin
+				\item if not, tipically the community writes it
+				\item if not, write it yourself (all in all is rather easy, at least to prepare a prototype)
+			\end{itemize}
+			\item Tell Gradle where to fetch the plugins
+			\item Apply the plugins
+			\item Include the appropriate dependencies
+			\item Launch the tasks provided by your plugin
+			\begin{itemize}
+				\item you may decide to create a task dependency to run them automatically
+			\end{itemize}
+		\end{itemize}
+	\end{block}
+	\scala{03-scalatest/src/main/scala/it/unibo/test/Test.scala}{\normalsize}
+	\scala{03-scalatest/src/test/scala/Test.scala}{\scriptsize}
+	\groovy{03-scalatest/build.gradle}{\tiny}
+		\begin{block}{\texttt{build.gradle} that enables and uses JUnit}
 		\begin{minted}[fontsize=\tiny]{bash}
-$ tree -A build
-build
-|-- classes
-|   |-- main
-|       |-- HelloGroovy.class
-|       |-- HelloScala.class
-|       |-- HelloScala$.class
-|       |-- HelloScala$delayedInit$body.class
-|       |-- HelloWorld.class
-|       |-- TestXtend.class
-|-- java
-|   |-- main
-|-- libs
-|   |-- 02-multilang.jar
-|-- tmp
-|   |-- compileGroovy
-|   |   |-- groovy-java-stubs
-|   |-- compileJava
-|   |-- compileScala
-|   |-- jar
-|   |   |-- MANIFEST.MF
-|   |-- scala
-|       |-- compilerAnalysis
-|           |-- compileScala.analysis
-|           |-- compileScala.analysis.relations
-|-- xtend
-    |-- main
-        |-- TestXtend.java
-15 directories, 11 files
+$ gradle clean reportScoverage
+[...]
+Discovery starting.
+Discovery completed in 89 milliseconds.
+Run starting. Expected test count is: 2
+Test1
+Test2
+MyTests:
+- An empty Set should have size 0 (24 milliseconds)
+- Some useless test (14 milliseconds)
+Run completed in 217 milliseconds.
+Total number of tests run: 2
+Suites: completed 2, aborted 0
+Tests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0
+All tests passed.
+:reportScoverage
+[scoverage] Generating scoverage reports...
+[scoverage] Written Cobertura XML report to ...
+[scoverage] Written XML report to ...
+[scoverage] Written HTML report to ...
+[scoverage] Coverage reports completed
+
+BUILD SUCCESSFUL in 13s
+7 actionable tasks: 7 executed
 		\end{minted}
 	\end{block}
+	\begin{center}
+		\includegraphics[width=.90\textwidth]{images/scalatest}
+	\end{center}
+	\begin{center}
+		\includegraphics[width=\textwidth]{images/scoverage}
+	\end{center}
 \end{frame}
 
 
@@ -1308,7 +1289,7 @@ eclipse {
 }
 		\end{minted}
 	\end{block}
-	Downloads from the repositories also sources and javadocs and feeds them to Eclipse: much easier to develop...
+	Downloads from the repositories also sources and javadocs and feeds them to Eclipse: makes development easier...
 \end{frame}
 
 \begin{frame}[fragile]{How the world looks like now}
