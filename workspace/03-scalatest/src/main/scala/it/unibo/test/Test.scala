@@ -1,11 +1,11 @@
 package it.unibo.test
 
-trait ISomething {
+trait Sometrait {
   def f: Int
   def g: Int
 }
 
-object Something {
+object Someobject {
   def f = 10
   def g = 77
 }

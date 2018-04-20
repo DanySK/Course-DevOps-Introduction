@@ -1,5 +1,5 @@
 import org.scalatest.FunSuite
-import it.unibo.test.{ISomething, Something}
+import it.unibo.test.{Sometrait, Someobject}
 import org.scalamock.scalatest.MockFactory
 
 class MyTests extends FunSuite with MockFactory {
@@ -9,7 +9,7 @@ class MyTests extends FunSuite with MockFactory {
   }
   test("Some useless test") {
     println("Test2")
-    val someStub = stub[ISomething]
+    val someStub = stub[Sometrait]
     (someStub.f _).when().returns(42)
     assert(someStub.f == 42)
   }
