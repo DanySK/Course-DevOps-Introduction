@@ -104,7 +104,7 @@ Danilo Pianini\\
 \newcommand{\baddev}[0]{Jimmy}
 \newcommand{\gooddev}[0]{Elliot}
 
-\begin{frame}[fragile, allowframebreaks]{What could possibly go wrong? Welcome to Hell }
+\begin{frame}[fragile, allowframebreaks]{What could possibly go wrong? Highway to Hell }
 	\baddev{} \cite{jargon} and \gooddev{} develop a software project together.
 	\begin{block}{Diverging histories}
 		\begin{itemize}
@@ -139,15 +139,15 @@ Danilo Pianini\\
 		\end{itemize}
 		\textbf{Agree on style (possibly using existing shared conventions), and enforce its adoption}
 	\end{block}
-	\begin{block}{Tests as decorations}
+	\begin{block}{Tests as decoration}
 		\begin{itemize}
-			\item \baddev{} prepared a lot of nice tests
-			\item \baddev{} rarely executes them
+			\item \gooddev{} prepared some nice tests
+			\item \baddev{} never runs them
 			\item \baddev{} code ends up being broken
 		\end{itemize}
 		\textbf{Execute your tests for every change you make}
 	\end{block}
-	\begin{block}{Works on my PC}
+	\begin{block}{But it works on my PC}
 		\begin{itemize}
 			\item Tests run correctly on \baddev{} computer
 			\item They don't on \gooddev{}'s
@@ -177,7 +177,7 @@ Danilo Pianini\\
 		\end{itemize}
 		\textbf{Automatize the dependency management}
 	\end{block}
-	\begin{block}{Fermented build}
+	\begin{block}{Rotten build}
 		\begin{itemize}
 			\item The project builds correctly and passes al tests
 			\item Nobody touches it, nobody builds it again for weeks
@@ -187,21 +187,23 @@ Danilo Pianini\\
 	\end{block}
 \end{frame}
 
-\begin{frame}[fragile, allowframebreaks]{What could possibly get improved? Road to paradise}
+\subsection{Stairway to heaven}
+
+\begin{frame}[fragile, allowframebreaks]{How to improve? Stairway to heaven}
 	\begin{block}{Protoduction \cite{jargon}}
 		\begin{center}
 			\includegraphics[width=.25\textwidth]{images/protoduction} \\
 			When prototype code ends up in production
 		\end{center}
 		\begin{itemize}
-			\item Classically used with a negative meaning
-			\item It's time to rehabilitate it
+			\item Usually used with a negative meaning
+			\item DevOps practices are making it safer than it used to be
 		\end{itemize}
 		\textbf{Make it easy to access and use the latest prototype}
 	\end{block}
 	\begin{block}{It's compiling \cite{xkcd303}}
 		\centering
-		\includegraphics[width=.49\textwidth]{images/compiling}
+		\includegraphics[width=.55\textwidth]{images/compiling}
 
 		\textbf{Make the building process fast!}
 	\end{block}
@@ -210,11 +212,9 @@ Danilo Pianini\\
 			\item Business Analysis often needs the latest version of the software to demonstrate upcoming features
 			\item \baddev{}'s time gets is spent several times per week just for preparing alpha releases
 		\end{itemize}
-		\textbf{Automatize the delivery}
+		\textbf{Automatize delivery / deployment}
 	\end{block}
 \end{frame}
-
-\subsection{Stairway to heaven}
 
 \begin{frame}[fragile]{Summary}
 	\begin{itemize}
@@ -237,9 +237,11 @@ Danilo Pianini\\
 		\item No single magic solution to all these problems is available
 		\item But they can all be tackled with the right combination of:
 		\begin{itemize}
-			\item Development tools
 			\item Development methodologies
-			\item Automatization tools
+			\item Development tools
+			\item Dependency management tools
+			\item Build automation tools
+			\item Continous integration tools
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -484,8 +486,8 @@ GIT - the stupid content tracker
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Best practices with git}
-	\begin{block}{Prefer the terminal}
-		Do not use graphical interfaces to the DVCS until you have a complete grasp of it, only rely on the terminal.
+	\begin{block}{The CLI is your truth}
+		Do not use graphical interfaces to the DVCS until you have a complete grasp of it, rely on the terminal.
 	\end{block}
 	\begin{block}{Ignore list}
 		Immediately configure a \texttt{.gitignore} file
@@ -802,9 +804,13 @@ GIT - the stupid content tracker
 \begin{frame}[fragile]{The actual dependency tree}
   \begin{block}{}
     \begin{minted}[fontsize=\scriptsize]{bash}
-+--- com.google.guava:guava:+ -> 19.0-rc2
-+--- commons-io:commons-io:+ -> 2.4
-\--- com.omertron:thetvdbapi:+ -> 1.7
++--- com.google.guava:guava:22.0
+|    +--- com.google.code.findbugs:jsr305:1.3.9
+|    +--- com.google.errorprone:error_prone_annotations:2.0.18
+|    +--- com.google.j2objc:j2objc-annotations:1.1
+|    \--- org.codehaus.mojo:animal-sniffer-annotations:1.14
++--- commons-io:commons-io:+ -> 2.6
+\--- com.omertron:thetvdbapi:[1.6, 1.7] -> 1.7
      +--- org.slf4j:slf4j-api:1.7.9
      \--- org.yamj:api-common:1.2
           +--- org.apache.commons:commons-lang3:3.3.2
@@ -819,10 +825,6 @@ GIT - the stupid content tracker
           \--- org.slf4j:slf4j-api:1.7.9
     \end{minted}
   \end{block}
-  \begin{itemize}
-   \item Libraries depend on other libraries
-   \item All the libraries must be in the classpath!
-  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Towards a dependency hell}
@@ -891,18 +893,19 @@ GIT - the stupid content tracker
 
 \begin{frame}[fragile]{Possible desired code}
   \begin{block}{}
-    \begin{minted}[fontsize=\scriptsize]{groovy}
+    \begin{minted}[fontsize=\scriptsize]{kotlin}
 repositories {
     mavenCentral()
     jCenter()
 }
 dependencies {
-    sourceGeneration 'org.antlr:antlr4:4.7'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'org.antlr:antlr-runtime:3.5.2'
-    testCompile 'junit:junit:4.12'
-    runtime 'ch.qos.logback:logback-classic:1.2.2'
-    testRuntime 'ch.qos.logback:logback-classic:1.2.2'
+    val logbackVersion = "1.2.2"
+    sourceGeneration("org.antlr:antlr4:4.7")
+    api("org.slf4j:slf4j-api:1.7.25")
+    implementation("org.antlr:antlr-runtime:3.5.2")
+    testImplementation("junit:junit:4.12")
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+    testRuntimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
 }
     \end{minted}
   \end{block}
@@ -937,8 +940,8 @@ dependencies {
 	\begin{block}{Idea}
 		Pick the best of ``declarative'' build systems, such as Apache Maven
 		\begin{itemize}
+			\item Convention over configuration
 			\item Dependency resolution
-			\item Rich default configuration
 		\end{itemize}
 		Pick the best from ``imperative'' build systems, such as Apache Ant.
 		\begin{itemize}
@@ -947,27 +950,27 @@ dependencies {
 	\end{block}
 	\begin{block}{Features}
 		\begin{itemize}
-			\item The build is written in a Groovy based DSL
+			\item The build is written in a DSL
+			\begin{itemize}
+				\item Historically, a Groovy-based DSL
+				\item Recently, a Kotlin-based DSL
+			\end{itemize}
 			\item Inherits from Ant the concept of ``task''
 			\item Automagic resolution of the order in which tasks should be executed
 			\item Built-in dependency resolution as Maven (SBT and Ant rely on Apache Ivy)
 			\item Incremental builds
 			\item Parallel task execution
-			\item Supports many languages (Java, Scala, Groovy are first class citizens)
-			\item Maven-style extensibility via plugins
+			\item Supports many languages (Java, Kotlin, Scala, Groovy are first class citizens)
+			\item Extensibility via plugins
 		\end{itemize}
 	\end{block}
 	\begin{block}{Diffusion}
 		\begin{itemize}
-			\item Slowly replacing Ant+Ivy and Maven as reference build system for Java and other JVM based languages
-			\item Gaining momentum also in the C/C++ community (assembler, c, cpp, objective-c, and objective-cpp are set to be included in the base distribution)
-			\item Selected by Google as preferred build system for Android
-			\begin{itemize}
-				\item Android Studio by default configures a Gradle build under the hood
-			\end{itemize}
+			\item Has replaced Maven as reference build system for Java and other JVM based languages
+			\item Lots of push from Android / Android Studio
+			\item Gaining momentum also in the C/C++ community (assembler, c, cpp, objective-c, and objective-cpp are included in the base distribution)
 			\item Similar to SBT, arguably less tailored towards Scala
-			\item Well integrated in Eclipse and (especially) IntelliJ
-			\item Eclipse recently included the Gradle Buildship in the classic distribution
+			\item Well integrated in IntelliJ, decently in Eclipse
 		\end{itemize}
 	\end{block}
 	\begin{block}{Details}
@@ -996,10 +999,9 @@ dependencies {
 
 \begin{frame}[fragile]{Under the hood}
 	\begin{itemize}
-		\item The Gradle build script is \textit{technically} a valid Groovy script (if you consider the Gradle API)
-		\item Anything that has not a valid Groovy syntax is not a valid Gradle build script
-		\item Groovy makes it easy to create DSLs, Gradle is built relying on such a feature
-		\item Everything you write is actually proper Groovy code (method calls, closures, and so on), but (you'll see) that aspect is very nicely hidden
+		\item The Gradle build script is \textit{technically} a valid Kotlin or Groovy script (if you consider the Gradle API)
+		\item Anything that has not a valid Kotlin / Groovy syntax is not a valid Gradle build script
+		\item Both Kotlin and Groovy make it easy to create DSLs, Gradle is built relying on such a feature
 		\item At the high level, the feeling is to just have to configure an existing plugin, much like Maven, for most of the things you normally do
 		\item When needed, it is easy to configure custom behaviour, or fiddle with the internals, in a functional or imperative fashion
 	\end{itemize}
@@ -1007,13 +1009,13 @@ dependencies {
 
 \begin{frame}[fragile, allowframebreaks]{Minimal Java build}
 	\java{00-minimal/src/main/java/HelloWorld.java}{\scriptsize}
-	\groovy{00-minimal/build.gradle}{\scriptsize}
+	\groovy{00-minimal/build.gradle.kts}{\scriptsize}
 	Yes, it's a one-liner.
 	\begin{block}{File system before the Gradle execution}
 		\begin{minted}[fontsize=\scriptsize]{bash}
 $ tree -A
 .
-|-- build.gradle
+|-- build.gradle.kts
 |-- src
     |-- main
         |-- java
@@ -1038,7 +1040,7 @@ $ gradle build
 :build
 
 BUILD SUCCESSFUL in 0s
-2 actionable tasks: 2 executed
+3 actionable tasks: 3 executed
 		\end{minted}
 	\end{block}
 	\begin{block}{File system after the execution}
@@ -1055,7 +1057,7 @@ $ tree -A
 |       |-- compileJava
 |       |-- jar
 |           |-- MANIFEST.MF
-|-- build.gradle
+|-- build.gradle.kts
 |-- src
     |-- main
         |-- java
@@ -1071,7 +1073,7 @@ $ tree -A
 
 \begin{frame}[fragile, allowframebreaks]{Let's build our toy example}
 	\java{01-dependencies/src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
-	\groovy{01-dependencies/build.gradle}{\scriptsize}
+	\groovy{01-dependencies/build.gradle.kts}{\scriptsize}
 	\groovy{01-dependencies/gradle.properties}{\scriptsize}
 	\groovy{01-dependencies/settings.gradle}{\scriptsize}
 	\begin{block}{\texttt{Execution}}
@@ -1125,7 +1127,7 @@ BUILD SUCCESSFUL in 2s
 		\begin{minted}[fontsize=\scriptsize]{bash}
 $ tree -A
 .
-|-- build.gradle
+|-- build.gradle.kts
 |-- src
     |-- main
         |-- groovy
@@ -1144,7 +1146,7 @@ $ tree -A
 	\java{02-multilang/src/main/java/HelloWorld.java}{\normalsize}
 	\kotlin{02-multilang/src/main/kotlin/HelloKt.kt}{\normalsize}
 	\scala{02-multilang/src/main/scala/HelloScala.scala}{\normalsize}
-	\groovy{02-multilang/build.gradle}{\tiny}
+	\groovy{02-multilang/build.gradle.kts}{\tiny}
 	\begin{block}{\texttt{Execution}}
 		\begin{minted}[fontsize=\tiny]{bash}
 $ gradle clean build
@@ -1182,14 +1184,10 @@ BUILD SUCCESSFUL in 7s
 			\item Put your test sources in \texttt{src/test/nameofyourlanguage}
 		\end{itemize}
 	\end{block}
-	\begin{block}{\texttt{build.gradle} that enables and uses JUnit}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-apply plugin: 'java'
-repositories {
-    mavenCentral()
-}
+	\begin{block}{Enable JUnit}
+		\begin{minted}[fontsize=\scriptsize]{kotlin}
 dependencies {
-    testCompile 'junit:junit:4.12'
+    testImplementation("junit:junit:4.12")
 }
 		\end{minted}
 	\end{block}
@@ -1216,8 +1214,8 @@ dependencies {
 	\end{block}
 	\scala{03-scalatest/src/main/scala/it/unibo/test/Test.scala}{\normalsize}
 	\scala{03-scalatest/src/test/scala/Test.scala}{\scriptsize}
-	\groovy{03-scalatest/build.gradle}{\tiny}
-		\begin{block}{\texttt{build.gradle} that enables and uses JUnit}
+	\groovy{03-scalatest/build.gradle.kts}{\tiny}
+		\begin{block}{\texttt{build.gradle.kts} that enables and uses JUnit}
 		\begin{minted}[fontsize=\tiny]{bash}
 $ gradle clean reportScoverage
 [...]
@@ -1273,25 +1271,6 @@ BUILD SUCCESSFUL in 13s
 	\end{block}
 \end{frame}
 
-\begin{frame}[fragile]{IDE integration}
-	IntelliJ integration is straightforward, no additional configuration is required.
-	
-	A Gradle integration plugin is included in the Eclipse distribution (Buildship).
-	\begin{block}{\texttt{build.gradle}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-apply plugin: 'eclipse'
-
-eclipse {
-    classpath {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
-		\end{minted}
-	\end{block}
-	Downloads from the repositories also sources and javadocs and feeds them to Eclipse: makes development easier...
-\end{frame}
-
 \begin{frame}[fragile]{How the world looks like now}
 	\begin{center}
 		\includegraphics[width=.9\textwidth]{images/ci-gradle}
@@ -1327,6 +1306,7 @@ eclipse {
 			\item FindBugs
 			\begin{itemize}
 				\item Analyzes the bytecode searching for bugs
+				\item Loads of false positives with Scala
 			\end{itemize}
 			\item PMD
 			\begin{itemize}
@@ -1339,10 +1319,9 @@ eclipse {
 				\item Forces code standard (indentation, formatting, Javadoc...)
 				\item Can be configured for working with arbitrary files
 			\end{itemize}
-			\item Codacy
+			\item Scalastyle, Ktlint
 			\begin{itemize}
-				\item Web based
-				\item scala-meta is available for Scala
+				\item Similar to Checkstyle, for Scala / Kotlin respectively
 			\end{itemize}
 		\end{itemize}
 	Plugins available for Gradle, Eclipse and IntelliJ
@@ -1352,22 +1331,19 @@ eclipse {
 \begin{frame}[fragile]{Code quality control advices}
 	\begin{itemize}
 		\item Ship the code checkers configuration files with your distribution
-		\begin{itemize}
-			\item Usually just one or two XML files
-		\end{itemize}
 		\item Make your IDE plugins configuration \textit{match exactly} your build automation tool configuration
-		\item Always track the IDE configuration with your SCM
+		\item Track the IDE configuration of checkers with your SCM
 		\begin{itemize}
 			\item New developers will import the configuration automatically if they have plugins installed
 			\item If a bad developer tries to change the configuration, you can spot it from the commit change set
 		\end{itemize}
 		\item Pick the rule configuration that suits your project
 		\begin{itemize}
-			\item Some rules are controversial at least
+			\item Some rules are controversial to say the least
 			\item Some rule have default arbitrary limits
-			\item Alchemist rules come from several years of tuning, fill free to use them
+			\item Alchemist's rules come from several years of tuning, fill free to use them
 		\end{itemize}
-		\item Require your developers to adhere
+		\item Force your developers to adhere
 	\end{itemize}
 \end{frame}
 
@@ -1482,7 +1458,7 @@ language: java
 		\end{minted}
 	\end{block}
 	\begin{enumerate}
-		\item Automatically searches for \texttt{build.gradle}
+		\item Automatically searches for \texttt{build.gradle} or \texttt{build.gradle.kts}
 		\item If found and \texttt{gradlew} is present runs
 		\begin{enumerate}
 			\item \texttt{./gradlew assemble}
@@ -1501,7 +1477,7 @@ script:
 	Further documentation on building Java-based projects is available \cite{travisjava}
 \end{frame}
 
-\begin{frame}[fragile]{How will the world looks like noe}
+\begin{frame}[fragile]{How will the world looks like now}
 	\begin{center}
 		\includegraphics[width=.9\textwidth]{images/ci-travis}
 	\end{center}
@@ -1596,30 +1572,30 @@ script:
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{Automatize artifact creation}
-	Very easy in Gradle:
-	\begin{itemize}
-		\item A task that runs after classes are compiled (to be sure we don't pack non-compiling stuff) that fits in a jar all the source code
-		\item A task that runs after the Javadoc has been generated, and compresses it in a jar file
-		\item Configure Gradle to add those files to the generated artifacts
-	\end{itemize}
-	\begin{block}{In \texttt{build.gradle}}
-		\begin{minted}[fontsize=\scriptsize]{groovy}
-task sourcesJar(type: Jar, dependsOn:classes) {
-     classifier = 'sources' 
-     from sourceSets.main.allSource 
-} 
-task javadocJar(type: Jar, dependsOn:javadoc) { 
-     classifier = 'javadoc' 
-     from javadoc.destinationDir 
-} 
-artifacts { 
-     archives sourcesJar 
-     archives javadocJar 
-}
-		\end{minted}
-	\end{block}
-\end{frame}
+% \begin{frame}[fragile]{Automatize artifact creation}
+% 	Very easy in Gradle:
+% 	\begin{itemize}
+% 		\item A task that runs after classes are compiled (to be sure we don't pack non-compiling stuff) that fits in a jar all the source code
+% 		\item A task that runs after the Javadoc has been generated, and compresses it in a jar file
+% 		\item Configure Gradle to add those files to the generated artifacts
+% 	\end{itemize}
+% 	\begin{block}{In \texttt{build.gradle.kts}}
+% 		\begin{minted}[fontsize=\scriptsize]{groovy}
+% task sourcesJar(type: Jar, dependsOn:classes) {
+%      classifier = 'sources' 
+%      from sourceSets.main.allSource 
+% } 
+% task javadocJar(type: Jar, dependsOn:javadoc) { 
+%      classifier = 'javadoc' 
+%      from javadoc.destinationDir 
+% } 
+% artifacts { 
+%      archives sourcesJar 
+%      archives javadocJar 
+% }
+% 		\end{minted}
+% 	\end{block}
+% \end{frame}
 
 \begin{frame}[fragile]{OSSRH account}
 	\begin{enumerate}
@@ -1651,6 +1627,30 @@ artifacts {
 	Once the system is configured with the private GPG key, Gradle can be told to automatically sign and upload artifacts to Maven Central
 \end{frame}
 
+\begin{frame}[fragile]{Use someone else's work}
+	Publishing on Central requires, Gradle side, to:
+	\begin{itemize}
+		\item Create Jars with Javadoc and sources
+		\item Sign all the artifacts
+		\item Configure the Gradle Publish Plugin appropriately
+	\end{itemize}
+	...lots of copypaste, if you publish there frequently...
+
+	In fact, I ended up writing my own plugin:
+	\url{https://plugins.gradle.org/plugin/org.danilopianini.publish-on-central}
+	
+    \begin{block}{\texttt{build.gradle.kts}}
+		\begin{minted}[fontsize=\scriptsize]{kotlin}
+plugins {
+  java
+  signing
+  `maven-publish`
+  id("org.danilopianini.publish-on-central") version "0.1.1"
+}
+		\end{minted}
+	\end{block}
+\end{frame}
+
 \begin{frame}[fragile]{Summary of the whole process}
 	\begin{center}
 		\includegraphics[width=.9\textwidth]{images/ci}
@@ -1669,21 +1669,49 @@ artifacts {
 	\begin{block}{Semantic versioning}
 		\begin{itemize}
 			\item Formally described, with RFC-style wording
-			\item Three levels plus optional: \texttt{MAJOR.MINOR.PATCH[-OTHER]}
+			\item Three levels plus optional: \texttt{MAJOR.MINOR.PATCH[-OTHER][+BUILD]}
 			\begin{itemize}
 				\item \texttt{MAJOR} --- Any incompatible API change
 				\item Major \texttt{0} is for initial development: anything may change at any time.
 				\item \texttt{MINOR} --- Add functionality in a backwards-compatible manner
 				\item \texttt{PATCH} --- Backwards-compatible bug fixes
 				\item \texttt{OTHER} --- Optionally decorates the version with additional information.
+				\item \texttt{BUILD} --- Optionally decorates the version with build information.
 			\end{itemize}
 		\end{itemize}
 	\end{block}
 \end{frame}
 
+\begin{frame}[fragile]{Semantic versioning with git}
+    The git repository status can be used to detect the version in a SemVer compatible fashion:
+    \begin{block}{LASTTAG[-DEVNAME][+COMMITHASH]}
+        \begin{itemize}
+            \item \texttt{LASTTAG} --- The latest tag in SemVer compatible format (\texttt{MAJOR.MINOR.PATCH})
+            \item Major \texttt{0} is for initial development: anything may change at any time.
+            \item \texttt{DEVNAME} --- Added if the current commit has no tag, customizable (e.g. \texttt{-beta}, or \texttt{-dev})
+            \item \texttt{COMMITHASH} --- The current commit hash, added only if the current commit has no tag
+        \end{itemize}
+    \end{block}
+\end{frame}
 
-
-
+\begin{frame}[fragile]{Automate it!}
+    \begin{itemize}
+        \item Since this is algorithmic, you can write the version computation in your \texttt{build.gradle.kts}
+        \item ...but if you use it pervasively, it ends up being a lot of copypaste...
+        \item Guess what? I wrote another plugin.
+        \item \url{https://plugins.gradle.org/plugin/org.danilopianini.git-sensitive-semantic-versioning}
+    \end{itemize}
+    \begin{block}{\texttt{build.gradle.kts}}
+		\begin{minted}[fontsize=\scriptsize]{kotlin}
+plugins {
+    id ("org.danilopianini.git-sensitive-semantic-versioning") version "0.1.0"
+}
+gitSemVer {
+    version = computeGitSemVer()
+}
+		\end{minted}
+	\end{block}
+\end{frame}
 
 \section*{\refname}
 %===============================================================================
