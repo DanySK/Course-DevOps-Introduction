@@ -1,7 +1,6 @@
 # Slides on Continuous Integration
 
-These slides were used as part of the presentation about continous integration and delivery for the course of "Paradigms for programming and developing" at the 
-University of Bologna in 2017.
+These slides were used as part of the presentation about continous integration and delivery for the course of "Paradigms for programming and developing" at the University of Bologna.
 
 ## License
 
@@ -11,4 +10,3 @@ This work is released under the [Creative Commons Attribution-NonCommercial-Shar
 ## Compiling the slides
 
 Plain LaTeX + minted. Requires the `-shell-escape` option to be specified (it's a minted requirement)
-
