@@ -43,11 +43,6 @@ script:
   - for dir in $(ls); do cd $dir; ./gradlew check || travis_terminate 1; cd ..; done
   - cd $TRAVIS_BUILD_DIR
 
-before_deploy:
-  - git config --local user.name "Danilo Pianini"
-  - git config --local user.email "danilo.pianini@unibo.it"
-  - $GRAVIS/autotag
-
 before_cache:
   - $GRAVIS/clean-gradle-cache
 cache:
@@ -56,7 +51,10 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_deploy:
-    - tree
+  - tree
+  - git config --local user.name "Danilo Pianini"
+  - git config --local user.email "danilo.pianini@unibo.it"
+  - $GRAVIS/autotag
 
 _deploy_base: &deploy_base
     provider: releases
