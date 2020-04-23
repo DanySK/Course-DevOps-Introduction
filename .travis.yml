@@ -39,7 +39,8 @@ before_install:
 
 script:
   - ./gradlew buildLatex
-  - find workspace -maxdepth 1 -type d \( ! -name workspace \) -exec bash -c "cd '{}' && ./gradlew check || travis_terminate 1" \;
+  - cd workspace
+  - for dir in $(ls); do cd $dir; ./gradlew check || travis_terminate 1; cd ..; done
 
 before_deploy:
   - git config --local user.name "Danilo Pianini"
