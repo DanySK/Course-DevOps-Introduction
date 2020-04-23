@@ -41,6 +41,7 @@ script:
   - ./gradlew buildLatex
   - cd workspace
   - for dir in $(ls); do cd $dir; ./gradlew check || travis_terminate 1; cd ..; done
+  - cd $TRAVIS_BUILD_DIR
 
 before_deploy:
   - git config --local user.name "Danilo Pianini"
@@ -53,6 +54,9 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+before_deploy:
+    - tree
 
 _deploy_base: &deploy_base
     provider: releases
