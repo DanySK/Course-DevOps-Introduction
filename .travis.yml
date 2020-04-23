@@ -1,5 +1,5 @@
 official-repo: &official-repo
-  DanySK/Template-LaTeX-CI
+  DanySK/Course-DevOps-Introduction
 language: minimal
 addons:
   apt:
