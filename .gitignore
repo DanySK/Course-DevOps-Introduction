@@ -1,3 +1,4 @@
+*conflicted copy*
 *.aux
 *.bbl
 *.blg
@@ -25,3 +26,4 @@ lab/
 .ide/
 *.kate-swp
 .directory
+*out/

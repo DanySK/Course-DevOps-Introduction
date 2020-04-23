@@ -37,7 +37,9 @@ before_install:
   - travis_retry git clone --depth 1 $GRAVIS_REPO $GRAVIS
   - source $GRAVIS/install-jdk
 
-script: ./gradlew buildLatex
+script:
+  - ./gradlew buildLatex
+  - find workspace -maxdepth 1 -type d \( ! -name workspace \) -exec bash -c "cd '{}' && ./gradlew check" \;
 
 before_deploy:
   - git config --local user.name "Danilo Pianini"

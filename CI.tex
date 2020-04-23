@@ -101,63 +101,60 @@ Danilo Pianini\\
 
 \subsection{Highway to hell}
 
-\newcommand{\baddev}[0]{Jimmy}
-\newcommand{\gooddev}[0]{Elliot}
-
 \begin{frame}[fragile, allowframebreaks]{What could possibly go wrong? Highway to Hell }
-	\baddev{} \cite{jargon} and \gooddev{} develop a software project together.
 	\begin{block}{Diverging histories}
 		\begin{itemize}
-			\item \baddev{} must develop a new feature, picks the latest \gooddev{}'s code
-			\item \baddev{} begins, and in the meantime \gooddev{} goes on with the rest
-			\item \baddev{} completes his part
-			\item \baddev{}'s code does not work the latest version
+			\item a sub-team must develop a new feature, picks the latest stable code
+			\item work begins, and in the meantime the software changes
+			\item the new feature is now complete
+			\item it just does not work the current version
 		\end{itemize}
 		\textbf{Keep your code in sync with the main development line}
 	\end{block}
 	\begin{block}{It was working two minutes ago}
 		\begin{itemize}
-			\item \baddev{} develops a new feature and tests it
-			\item \baddev{} shows the feature five minutes later to \gooddev{}, it does not work anymore
-			\item \baddev{} can't figure out what happened, and needs to spend time debugging
-			\item \gooddev{} can't see the feature, and must wait for \baddev{} to iron the problem out
+			\item a team writes a new feature and tests it
+			\item they show the feature five minutes later to the project leader
+			\item it does not work anymore
+			\item the team can't figure out what happened, and needs to spend time debugging
+			\item the leader can't see the feature, and must wait for the developers to iron the problem out
 		\end{itemize}
 		\textbf{Make sure you can restore any small change you made}
 	\end{block}
 	\begin{block}{Stylish hell}
 		\begin{itemize}
-			\item \baddev{} and \gooddev{} styles are misaligned
+			\item development styles are misaligned
 			\begin{itemize}
 				\item CRLF vs. LF
 				\item Egyptian parentheses \cite{jargon} vs. Allman
 				\item Tabs vs. spaces
 				\item Basically anything you can start a religion war upon
 			\end{itemize}
-			\item \baddev{} and \gooddev{} IDEs are configured differently
-			\item The project continuously flips from one style to the other, inconsistently
-			\item Becomes impossible to localize changes
+			\item developers' IDEs are configured differently
+			\item the project continuously flips from one style to the other, inconsistently
+			\item it becomes impossible to localize changes
 		\end{itemize}
 		\textbf{Agree on style (possibly using existing shared conventions), and enforce its adoption}
 	\end{block}
 	\begin{block}{Tests as decoration}
 		\begin{itemize}
-			\item \gooddev{} prepared some nice tests
-			\item \baddev{} never runs them
-			\item \baddev{} code ends up being broken
+			\item a feature has nice tests attached
+			\item the tests are never executed
+			\item the tested code ends up being broken
 		\end{itemize}
 		\textbf{Execute your tests for every change you make}
 	\end{block}
 	\begin{block}{But it works on my PC}
 		\begin{itemize}
-			\item Tests run correctly on \baddev{} computer
-			\item They don't on \gooddev{}'s
-			\item Time gets wasted to debug the tests to decide whether or not the code should get debugged
+			\item tests run correctly on the machine of the one who wrote them
+			\item they don't on the client's though
+			\item developers must understand if they need to debug the tests or debug the code
 		\end{itemize}
 		\textbf{Execute your tests in a fresh environment resembling the production environment}
 	\end{block}
 	\begin{block}{Unexpected merge failure}
 		\begin{itemize}
-			\item \baddev{} develops a new feature, everything seems to work
+			\item the team develops a new feature, everything seems to work
 			\item The feature gets merged with the mainline
 			\item Tests fail
 		\end{itemize}
@@ -165,8 +162,8 @@ Danilo Pianini\\
 	\end{block}
 	\begin{block}{Dependency hell}
 		\begin{itemize}
-			\item \baddev{} needs a library
-			\item Imports it directly in the code base
+			\item a new feature needs a library
+			\item it gets imported directly in the code base
 			\item This dependency now must be dealt with manually:
 			\begin{itemize}
 				\item Updates
@@ -179,9 +176,9 @@ Danilo Pianini\\
 	\end{block}
 	\begin{block}{Rotten build}
 		\begin{itemize}
-			\item The project builds correctly and passes al tests
-			\item Nobody touches it, nobody builds it again for weeks
-			\item Once a rebuild is required, the project no longer builds or passes tests
+			\item the project builds correctly and passes al tests
+			\item nobody touches it, nobody builds it again for weeks
+			\item once a rebuild is required, the project no longer builds or passes tests
 		\end{itemize}
 		\textbf{Rebuild often}
 	\end{block}
@@ -210,7 +207,7 @@ Danilo Pianini\\
 	\begin{block}{It's delivering}
 		\begin{itemize}
 			\item Business Analysis often needs the latest version of the software to demonstrate upcoming features
-			\item \baddev{}'s time gets is spent several times per week just for preparing alpha releases
+			\item someone spends several hours per week just for packaging alpha releases
 		\end{itemize}
 		\textbf{Automatize delivery / deployment}
 	\end{block}
@@ -234,14 +231,16 @@ Danilo Pianini\\
 
 \begin{frame}[fragile]{No silver bullet}
 	\begin{itemize}
-		\item No single magic solution to all these problems is available
-		\item But they can all be tackled with the right combination of:
+		\item No single magic solution to all these problems
+		\item they must be tackled with the a combination of tools and practices for:
 		\begin{itemize}
-			\item Development methodologies
-			\item Development tools
-			\item Dependency management tools
-			\item Build automation tools
-			\item Continous integration tools
+			\item Development
+			\item Sharing
+			\item Dependency management
+			\item Build automation
+			\item versioning
+			\item Continous integration
+			\item Continous delivery
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -303,10 +302,9 @@ Danilo Pianini\\
 			\item All the above, make it fast!
 		\end{itemize}
 	\end{block}
-	\begin{block}{Travis CI (+ Docker)}
+	\begin{block}{Travis CI}
 		\begin{center}
 			\includegraphics[height=.1\textheight]{images/travis-logo} ~ 
-			\includegraphics[height=.1\textheight]{images/docker-logo} ~ 
 		\end{center}
 
 		Continuous integration and delivery system (+ software container). Will help with:
@@ -378,24 +376,24 @@ Danilo Pianini\\
 	\end{block}
 \end{frame}
 
-\begin{frame}[fragile]{The \texttt{git} \texttt{README.md} file}
-	\begin{block}{}
-		\begin{minted}[fontsize=\footnotesize]{yaml}
-GIT - the stupid content tracker
-
-"git" can mean anything, depending on your mood.
-
- - random three-letter combination that is pronounceable, and not
-   actually used by any common UNIX command.  The fact that it is a
-   mispronounciation of "get" may or may not be relevant.
- - stupid. contemptible and despicable. simple. Take your pick from the
-   dictionary of slang.
- - "global information tracker": you're in a good mood, and it actually
-   works for you. Angels sing, and a light suddenly fills the room. 
- - "goddamn idiotic truckload of sh*t": when it breaks
-		\end{minted}
-	\end{block}
-\end{frame}
+%\begin{frame}[fragile]{The \texttt{git} \texttt{README.md} file}
+%	\begin{block}{}
+%		\begin{minted}[fontsize=\footnotesize]{yaml}
+%GIT - the stupid content tracker
+%
+%"git" can mean anything, depending on your mood.
+%
+% - random three-letter combination that is pronounceable, and not
+%   actually used by any common UNIX command.  The fact that it is a
+%   mispronounciation of "get" may or may not be relevant.
+% - stupid. contemptible and despicable. simple. Take your pick from the
+%   dictionary of slang.
+% - "global information tracker": you're in a good mood, and it actually
+%   works for you. Angels sing, and a light suddenly fills the room.
+% - "goddamn idiotic truckload of sh*t": when it breaks
+%		\end{minted}
+%	\end{block}
+%\end{frame}
 
 \begin{frame}[fragile]{Features}
 	\begin{itemize}
@@ -690,6 +688,7 @@ GIT - the stupid content tracker
 			\item By far the largest host of source code in the world
 			\item Markdown supported also in comments and issue posts
 			\item Beautiful development statistics
+			\item Many third-part services and open API
 			\item De facto standard for open source software
 		\end{itemize}
 	\end{block}
@@ -783,17 +782,17 @@ GIT - the stupid content tracker
 \begin{frame}[fragile]{Trick revealed}
   I used a few existing libraries!
   \begin{itemize}
-    \item Google Guava
+    \item Jooq Joo$\lambda$
     \begin{itemize}
-      \item Used for referencing the UTF-8 \texttt{Charset} without using \texttt{String}s (less error-prone)
+      \item Used for unchecked lambda functions
     \end{itemize}
     \item Apache Commons I/O
     \begin{itemize}
       \item Used for converting a resource stream pointing to a \texttt{String} 
     \end{itemize}
-    \item Omertron's thetvdbapi
+    \item A retrofit-based API for TheTVDB
     \begin{itemize}
-      \item Queries TheTVDB given a valid API key, hiding all the HTTP communication and XML parsing
+      \item Queries TheTVDB given a valid API key, hiding all the HTTP communication and JSON parsing
     \end{itemize}
   \end{itemize}
   \begin{block}{But wait, there is more!}
@@ -804,25 +803,15 @@ GIT - the stupid content tracker
 \begin{frame}[fragile]{The actual dependency tree}
   \begin{block}{}
     \begin{minted}[fontsize=\scriptsize]{bash}
-+--- com.google.guava:guava:22.0
-|    +--- com.google.code.findbugs:jsr305:1.3.9
-|    +--- com.google.errorprone:error_prone_annotations:2.0.18
-|    +--- com.google.j2objc:j2objc-annotations:1.1
-|    \--- org.codehaus.mojo:animal-sniffer-annotations:1.14
-+--- commons-io:commons-io:+ -> 2.6
-\--- com.omertron:thetvdbapi:[1.6, 1.7] -> 1.7
-     +--- org.slf4j:slf4j-api:1.7.9
-     \--- org.yamj:api-common:1.2
-          +--- org.apache.commons:commons-lang3:3.3.2
-          +--- commons-dbcp:commons-dbcp:1.4
-          |    \--- commons-pool:commons-pool:1.5.4 -> 1.6
-          +--- commons-pool:commons-pool:1.6
-          +--- commons-codec:commons-codec:1.10
-          +--- org.apache.httpcomponents:httpclient:4.3.6
-          |    +--- org.apache.httpcomponents:httpcore:4.3.3
-          |    +--- commons-logging:commons-logging:1.1.3
-          |    \--- commons-codec:commons-codec:1.6 -> 1.10
-          \--- org.slf4j:slf4j-api:1.7.9
+		+--- commons-io:commons-io:+ -> 2.6
+		+--- com.uwetrottmann.thetvdb-java:thetvdb-java:2.2.0
+		|    +--- com.squareup.retrofit2:retrofit:2.6.2
+		|    |    \--- com.squareup.okhttp3:okhttp:3.12.0
+		|    |         \--- com.squareup.okio:okio:1.15.0
+		|    \--- com.squareup.retrofit2:converter-gson:2.6.2
+		|         +--- com.squareup.retrofit2:retrofit:2.6.2 (*)
+		|         \--- com.google.code.gson:gson:2.8.5
+		\--- org.jooq:jool-java-8:+ -> 0.9.14
     \end{minted}
   \end{block}
 \end{frame}
@@ -830,8 +819,6 @@ GIT - the stupid content tracker
 \begin{frame}[fragile, allowframebreaks]{Towards a dependency hell}
 	This was a toy program, consisting of a single Java source file of some twenty lines of code.
 
-	Regardless, it requires \textbf{12} external libraries in order to run.
-	
 	\begin{block}{Libraries explosion}
 		\begin{itemize}
 			\item It is very common for a non-toy project to get past 50 dependencies
@@ -1074,8 +1061,7 @@ $ tree -A
 \begin{frame}[fragile, allowframebreaks]{Let's build our toy example}
 	\java{01-dependencies/src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
 	\groovy{01-dependencies/build.gradle.kts}{\scriptsize}
-	\groovy{01-dependencies/gradle.properties}{\scriptsize}
-	\groovy{01-dependencies/settings.gradle}{\scriptsize}
+	\groovy{01-dependencies/settings.gradle.kts}{\scriptsize}
 	\begin{block}{\texttt{Execution}}
 		\begin{minted}[fontsize=\tiny]{bash}
 $ gradle clean build
@@ -1108,9 +1094,9 @@ BUILD SUCCESSFUL in 2s
 	\begin{itemize}
 		\item Dependencies in Gradle can be specified by defining
 		\begin{itemize}
-			\item Where to retrieve software (Maven Central and JCenter are first class citizens)
+			\item Where to retrieve software from (e.g. Maven Central or JCenter)
 			\item The list of dependencies for each scope
-			\item Some scopes import other scopes (e.g. \texttt{runtime} by default contains the whole \texttt{compile} scope)
+			\item Some scopes inherit other scopes (e.g. \texttt{runtime} by default contains the whole \texttt{implementation} scope)
 		\end{itemize}
 		\item Dependencies can be specified with a specific version, a version range, or using \texttt{+} as ``latest''
 		\begin{itemize}
@@ -1181,16 +1167,28 @@ BUILD SUCCESSFUL in 7s
 	\begin{block}{Tests and Gradle, how to:}
 		\begin{itemize}
 			\item Add the libraries you need to the appropriate dependency scope
+			\item Configure the testing framework as needed
+            \begin{itemize}
+                \item Junit 4 comes pre-configured
+                \item Junit 5 needs the engine to be enabled
+                \item Other frameworks may require plugins / configuration / libraries
+            \end{itemize}
 			\item Put your test sources in \texttt{src/test/nameofyourlanguage}
 		\end{itemize}
 	\end{block}
-	\begin{block}{Enable JUnit}
-		\begin{minted}[fontsize=\scriptsize]{kotlin}
-dependencies {
-    testImplementation("junit:junit:4.12")
-}
-		\end{minted}
-	\end{block}
+% 	\begin{block}{Enable JUnit}
+% 		\begin{minted}[fontsize=\scriptsize]{kotlin}
+% dependencies {
+%     testImplementation("junit:junit:4.12")
+% }
+% 		\end{minted}
+% 	\end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{An example with Scala and JUnit}
+	\scala{04-junit/src/main/scala/it/unibo/test/Test.scala}{\normalsize}
+	\scala{04-junit/src/test/scala/MyTest.scala}{\tiny}
+	\groovy{04-junit/build.gradle.kts}{\tiny}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{An example with ScalaTest and Scoverage}
@@ -1429,7 +1427,8 @@ BUILD SUCCESSFUL in 13s
 		\end{itemize}
 		\item Free for open source projects
 		\item Cronjobs
-		\item Build instances based on Docker
+		\item Multi-platform builds (Windows, MacOS, Linux)
+		\item Multi-arch builds (amd64, arm64...)
 		\item Project-local configuration via YAML (in the \texttt{.travis.yml} file)
 		\item Out of the box support for Gradle
 		\item Dozens of deployment targets
@@ -1440,9 +1439,6 @@ BUILD SUCCESSFUL in 13s
 	\begin{itemize}
 		\item A web-hook can be registered to your GitHub repository that triggers Travis CI at each new commit
 		\item Travis CI starts a pristine appropriate environment
-		\begin{itemize}
-			\item Can be a container or a full virtual machine, depending on whether \texttt{sudo} is required \cite{travisbuild}
-		\end{itemize}
 		\item The project gets cloned
 		\item The system is configured as per \texttt{.travis.yml} settings
 		\item The configured commands are executed

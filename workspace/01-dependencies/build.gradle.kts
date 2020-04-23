@@ -6,9 +6,9 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.google.guava:guava:22.0")
     implementation("commons-io:commons-io:+")
-    implementation("com.omertron:thetvdbapi:[1.6, 1.7]")
+    implementation("com.uwetrottmann.thetvdb-java:thetvdb-java:+")
+    implementation("org.jooq:jool-java-8:+")
 }
 application {
     mainClassName = "it.unibo.ci.PrintBreakingBad" 
