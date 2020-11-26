@@ -20,6 +20,8 @@ jobs:
         uses: DanySK/semver-autotag-action@master
       - name: Install TeXLive
         uses: DanySK/setup-texlive-action@master
+      - name: Compile LaTeX
+        uses: DanySK/compile-latex-action@master
       - name: Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
