@@ -18,15 +18,8 @@ jobs:
         run: git fetch --tags -f
       - name: Autotag
         uses: DanySK/semver-autotag-action@master
-      - uses: docker://thomasweise/docker-texlive-full:latest
-        with:
-          args: pdflatex CI.tex
-      - uses: docker://thomasweise/docker-texlive-full:latest
-        with:
-          args: bibtex CI.tex
-      - uses: docker://thomasweise/docker-texlive-full:latest
-        with:
-          args: pdflatex CI.tex
+      - name: Install TeXLive
+        uses: DanySK/setup-texlive-action@master
       - name: Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
