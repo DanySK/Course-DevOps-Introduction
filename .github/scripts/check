@@ -1,0 +1,6 @@
+#!/bin/sh
+for dir in $(ls); do
+    cd $dir
+    ./gradlew check || exit 1
+    cd ..
+done
