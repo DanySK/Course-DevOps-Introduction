@@ -1,6 +1,7 @@
 #!/bin/sh
-for dir in $(ls); do
-    cd $dir
-    ./gradlew check || exit 1
-    cd ..
+root_dir=$(pwd)
+for dir in $(ls -d workspace/*/); do
+    cd "$dir"
+    ./gradlew check
+    cd "$root_dir"
 done
