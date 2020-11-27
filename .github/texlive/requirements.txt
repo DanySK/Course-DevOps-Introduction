@@ -1,1 +1,3 @@
+python-pygments
+texlive-latex-extra
 texlive-pictures
